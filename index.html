@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My TO-DO LIST</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    #taskInput {
+      padding: 10px;
+      width: 250px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 8px 12px;
+      margin-left: 5px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+      width: 400px;
+      margin-top: 20px;
+    }
+
+    li {
+      background: #fff;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    li.completed .task-text {
+      text-decoration: line-through;
+      color: #888;
+    }
+
+    .task-text {
+      flex: 1;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+
+    .btn-group button {
+      margin-left: 5px;
+    }
+
+    .delete-btn {
+      background-color: #dc3545;
+    }
+
+    .delete-btn:hover {
+      background-color: #b02a37;
+    }
+
+    .edit-btn {
+      background-color: #ffc107;
+      color: black;
+    }
+
+    .edit-btn:hover {
+      background-color: #e0a800;
+    }
+  </style>
+</head>
+<body>
+  <h1>MY TO-DO LIST</h1>
+  <div>
+    <input type="text" id="taskInput" placeholder="Add a new task...">
+    <button onclick="addTask()">Add Task</button>
+  </div>
+
+  <h2>Tasks:</h2>
+  <ul id="taskList"></ul>
+
+  <script>
+    function addTask() {
+      const taskInput = document.getElementById("taskInput");
+      const taskText = taskInput.value.trim();
+
+      if (taskText === "") {
+        alert("Please enter a task.");
+        return;
+      }
+
+      const li = document.createElement("li");
+
+      const span = document.createElement("span");
+      span.className = "task-text";
+      span.textContent = taskText;
+
+      // Toggle complete
+      span.onclick = function () {
+        li.classList.toggle("completed");
+      };
+
+      // Create edit button
+      const editBtn = document.createElement("button");
+      editBtn.textContent = "Edit";
+      editBtn.className = "edit-btn";
+      editBtn.onclick = function () {
+        if (editBtn.textContent === "Edit") {
+          const input = document.createElement("input");
+          input.type = "text";
+          input.value = span.textContent;
+          input.className = "task-edit-input";
+          li.replaceChild(input, span);
+          editBtn.textContent = "Save";
+        } else {
+          const input = li.querySelector(".task-edit-input");
+          span.textContent = input.value.trim() || "Untitled Task";
+          li.replaceChild(span, input);
+          editBtn.textContent = "Edit";
+        }
+      };
+
+      // Create delete button
+      const deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "Delete";
+      deleteBtn.className = "delete-btn";
+      deleteBtn.onclick = function () {
+        li.remove();
+      };
+
+      const btnGroup = document.createElement("div");
+      btnGroup.className = "btn-group";
+      btnGroup.appendChild(editBtn);
+      btnGroup.appendChild(deleteBtn);
+
+      li.appendChild(span);
+      li.appendChild(btnGroup);
+      document.getElementById("taskList").appendChild(li);
+
+      taskInput.value = "";
+    }
+  </script>
+</body>
+</html>
